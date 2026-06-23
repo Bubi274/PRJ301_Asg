@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
-    <servlet>
-        <servlet-name>Prep</servlet-name>
-        <servlet-class>controller.Prep</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Prep</servlet-name>
-        <url-pattern>/Prep</url-pattern>
-    </servlet-mapping>
+<web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
+         https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
+
+    <display-name>PRJ301 - Building Management System</display-name>
+
+    <welcome-file-list>
+        <welcome-file>login</welcome-file>
+    </welcome-file-list>
+
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
+
+    <!--
+        Servlet va Filter da khai bao bang annotation (@WebServlet, @WebFilter).
+        Servlet 3.0+ tu dong quet annotation, khong can khai bao lai o day.
+    -->
+
 </web-app>

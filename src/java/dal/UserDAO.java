@@ -1,6 +1,5 @@
-package dao;
+package dal;
 
-import dal.DBContext;
 import model.User;
 
 import java.sql.*;
@@ -9,17 +8,38 @@ import java.util.List;
 
 public class UserDAO {
 
-    /** UC-AD-01: Lấy user theo username để verify password ở Servlet */
-    public User getByUsername(String username) {
+    /** Dashboard: Đếm tổng số user trong hệ thống */
+    public int countUsers() {
         DBContext db = new DBContext();
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        String sql = "SELECT * FROM Users WHERE Username = ?";
+        String sql = "SELECT COUNT(*) FROM Users";
         try {
             con = db.getConnection();
             ps = con.prepareStatement(sql);
-            ps.setString(1, username);
+            rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try { db.closeConnection(con, ps, rs); } catch (SQLException ex) { ex.printStackTrace(); }
+        }
+        return 0;
+    }
+
+    /** UC-AD-01: Lấy user theo username hoặc email để verify password ở Servlet */
+    public User getByUsernameOrEmail(String identifier) {
+        DBContext db = new DBContext();
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String sql = "SELECT * FROM Users WHERE Username = ? OR Email = ?";
+        try {
+            con = db.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, identifier);
+            ps.setString(2, identifier);
             rs = ps.executeQuery();
             if (rs.next()) return mapRow(rs);
         } catch (Exception e) {
@@ -174,13 +194,12 @@ public class UserDAO {
         }
     }
 
-    /** UC-AD-04: Cập nhật account. UpdatedBy lấy từ session admin đang đăng nhập. */
-    public boolean updateUser(User u, int updatedByAdminId) {
+    /** UC-AD-04: Cập nhật account. */
+    public boolean updateUser(User u) {
         DBContext db = new DBContext();
         Connection con = null;
         PreparedStatement ps = null;
-        // UpdatedAt KHÔNG set ở đây — trigger trg_Users_UpdatedAt tự động set
-        String sql = "UPDATE Users SET FullName=?, Email=?, Phone=?, RoleId=?, IsActive=?, UpdatedBy=? "
+        String sql = "UPDATE Users SET FullName=?, Email=?, Phone=?, RoleId=?, IsActive=? "
                 + "WHERE UserId=?";
         try {
             con = db.getConnection();
@@ -190,8 +209,7 @@ public class UserDAO {
             ps.setString(3, u.getPhone());
             ps.setInt(4, u.getRoleId());
             ps.setBoolean(5, u.isActive());
-            ps.setInt(6, updatedByAdminId);
-            ps.setInt(7, u.getUserId());
+            ps.setInt(6, u.getUserId());
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -201,20 +219,21 @@ public class UserDAO {
         }
     }
 
-    /** UC-AD-05: Soft delete — chỉ disable Users.IsActive, KHÔNG động ApartmentResidents/ResidentServices */
-    public String softDeleteUser(int userId) {
+    /** Hard delete - Yêu cầu phải xóa các dữ liệu liên quan trước */
+    public String hardDeleteUser(int userId) {
         DBContext db = new DBContext();
         Connection con = null;
-        CallableStatement cs = null;
+        PreparedStatement ps = null;
         try {
             con = db.getConnection();
-            cs = con.prepareCall("{call sp_DeleteUserAccount(?)}");
-            cs.setInt(1, userId);
-            cs.execute();
-            return "SUCCESS";
+            ps = con.prepareStatement("DELETE FROM Users WHERE UserId = ?");
+            ps.setInt(1, userId);
+            int rows = ps.executeUpdate();
+            if (rows > 0) return "SUCCESS";
+            return "NOT_FOUND";
         } catch (SQLException e) {
-            if (e.getErrorCode() == 50001) {
-                return "NOT_FOUND";
+            if (e.getErrorCode() == 547) {
+                return "CONSTRAINT";
             }
             e.printStackTrace();
             return "ERROR";
@@ -222,7 +241,49 @@ public class UserDAO {
             e.printStackTrace();
             return "ERROR";
         } finally {
-            try { db.closeConnection(con, cs, null); } catch (SQLException ex) { ex.printStackTrace(); }
+            try { db.closeConnection(con, ps, null); } catch (SQLException ex) { ex.printStackTrace(); }
+        }
+    }
+
+    /** Quên mật khẩu: Xác thực đúng Username và Email */
+    public boolean verifyUsernameAndEmail(String username, String email) {
+        DBContext db = new DBContext();
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String sql = "SELECT 1 FROM Users WHERE Username = ? AND Email = ? AND IsActive = 1";
+        try {
+            con = db.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, username);
+            ps.setString(2, email);
+            rs = ps.executeQuery();
+            return rs.next();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try { db.closeConnection(con, ps, rs); } catch (SQLException ex) { ex.printStackTrace(); }
+        }
+        return false;
+    }
+
+    /** Quên mật khẩu: Cập nhật mật khẩu mới */
+    public boolean updatePassword(String username, String newPasswordHash) {
+        DBContext db = new DBContext();
+        Connection con = null;
+        PreparedStatement ps = null;
+        String sql = "UPDATE Users SET PasswordHash = ? WHERE Username = ?";
+        try {
+            con = db.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, newPasswordHash);
+            ps.setString(2, username);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try { db.closeConnection(con, ps, null); } catch (SQLException ex) { ex.printStackTrace(); }
         }
     }
 
