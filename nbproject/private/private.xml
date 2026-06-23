@@ -5,8 +5,15 @@
         <group name="PRJ301-SP26"/>
         <group name="SWP391"/>
         <group>
+            <file>file:/D:/PRJ301_Asg/src/java/dal/AssignmentDAO.java</file>
             <file>file:/D:/PRJ301_Asg/src/java/utils/TestDAO.java</file>
+            <file>file:/D:/PRJ301_Asg/src/java/model/Notification.java</file>
+            <file>file:/D:/PRJ301_Asg/src/java/model/Position.java</file>
+            <file>file:/D:/PRJ301_Asg/src/java/model/Request.java</file>
+            <file>file:/D:/PRJ301_Asg/src/java/dal/NotificationDAO.java</file>
             <file>file:/D:/PRJ301_Asg/src/java/utils/DBConnection.java</file>
+            <file>file:/D:/PRJ301_Asg/src/java/dal/PositionDAO.java</file>
+            <file>file:/D:/PRJ301_Asg/src/java/dal/StaffDAO.java</file>
         </group>
     </open-files>
 </project-private>

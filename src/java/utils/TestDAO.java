@@ -1,9 +1,9 @@
 package utils;
 
-import dao.PositionDAO;
-import dao.AssignmentDAO;
-import dao.NotificationDAO;
-import dao.StaffDAO;
+import dal.PositionDAO;
+import dal.AssignmentDAO;
+import dal.NotificationDAO;
+import dal.StaffDAO;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
