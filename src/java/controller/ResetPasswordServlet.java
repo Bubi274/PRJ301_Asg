@@ -30,7 +30,12 @@ public class ResetPasswordServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("resetPassword.jsp").forward(request, response);
+        HttpSession session = request.getSession();
+        if (session.getAttribute("reset_user") == null) {
+            response.sendRedirect(request.getContextPath() + "/forgotPassword");
+            return;
+        }
+        request.getRequestDispatcher("/resetPassword.jsp").forward(request, response);
     }
 
     /**
@@ -40,57 +45,55 @@ public class ResetPasswordServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String username       = request.getParameter("username");
-        String email          = request.getParameter("email");
+        HttpSession session = request.getSession();
+        String username = (String) session.getAttribute("reset_user");
+
+        if (username == null) {
+            response.sendRedirect(request.getContextPath() + "/forgotPassword");
+            return;
+        }
+
         String newPassword    = request.getParameter("newPassword");
         String confirmPassword = request.getParameter("confirmPassword");
 
         // 1. Validate input không rỗng
-        if (username == null || username.trim().isEmpty()
-                || email == null || email.trim().isEmpty()
-                || newPassword == null || newPassword.trim().isEmpty()
+        if (newPassword == null || newPassword.trim().isEmpty()
                 || confirmPassword == null || confirmPassword.trim().isEmpty()) {
-            request.setAttribute("error", "Vui lòng nhập đầy đủ tất cả các trường.");
-            request.getRequestDispatcher("resetPassword.jsp").forward(request, response);
+            request.setAttribute("error", "Vui lòng nhập đầy đủ mật khẩu mới và xác nhận.");
+            request.getRequestDispatcher("/resetPassword.jsp").forward(request, response);
             return;
         }
-
-        username = username.trim();
-        email = email.trim();
 
         // 2. Validate mật khẩu tối thiểu 6 ký tự
         if (newPassword.length() < 6) {
             request.setAttribute("error", "Mật khẩu mới phải có ít nhất 6 ký tự.");
-            request.getRequestDispatcher("resetPassword.jsp").forward(request, response);
+            request.getRequestDispatcher("/resetPassword.jsp").forward(request, response);
             return;
         }
 
         // 3. Validate hai mật khẩu phải khớp nhau
         if (!newPassword.equals(confirmPassword)) {
             request.setAttribute("error", "Mật khẩu xác nhận không khớp. Vui lòng nhập lại.");
-            request.getRequestDispatcher("resetPassword.jsp").forward(request, response);
+            request.getRequestDispatcher("/resetPassword.jsp").forward(request, response);
             return;
         }
 
-        // 4. Xác thực Username và Email có khớp trong DB không
-        boolean isValidUser = userDAO.verifyUsernameAndEmail(username, email);
-        if (!isValidUser) {
-            request.setAttribute("error", "Thông tin không chính xác hoặc tài khoản đã bị khóa.");
-            request.getRequestDispatcher("resetPassword.jsp").forward(request, response);
-            return;
-        }
-
-        // 5. Hash và cập nhật mật khẩu mới vào DB
+        // 4. Hash và cập nhật mật khẩu mới vào DB
         String hashedPassword = sha256(newPassword);
         boolean success = userDAO.updatePassword(username, hashedPassword);
 
         if (success) {
-            // Hiển thị mật khẩu mới lên màn hình để xác nhận
-            request.setAttribute("newPassword", newPassword);
-            request.getRequestDispatcher("resetPassword.jsp").forward(request, response);
+            // Xóa session
+            session.removeAttribute("reset_user");
+            
+            // Hiển thị thành công
+            request.setAttribute("success", true);
+            request.setAttribute("message", "Đặt lại mật khẩu thành công! Vui lòng sử dụng mật khẩu mới để đăng nhập.");
+            request.setAttribute("backUrl", request.getContextPath() + "/login");
+            request.getRequestDispatcher("/resultMessage.jsp").forward(request, response);
         } else {
             request.setAttribute("error", "Lỗi hệ thống. Không thể đặt lại mật khẩu lúc này.");
-            request.getRequestDispatcher("resetPassword.jsp").forward(request, response);
+            request.getRequestDispatcher("/resetPassword.jsp").forward(request, response);
         }
     }
 

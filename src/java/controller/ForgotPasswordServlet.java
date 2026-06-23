@@ -69,24 +69,12 @@ public class ForgotPasswordServlet extends HttpServlet {
             return;
         }
 
-        // 2. Tạo mật khẩu ngẫu nhiên (8 ký tự: chữ + số)
-        String newPassword = generateRandomPassword(8);
-        String hashedNewPassword = sha256(newPassword);
-
-        // 3. Cập nhật vào DB
-        boolean success = userDAO.updatePassword(username.trim(), hashedNewPassword);
-
-        if (success) {
-            // Hiển thị mật khẩu trực tiếp lên màn hình
-            request.setAttribute("success", true);
-            request.setAttribute("message", "Khôi phục thành công! Mật khẩu mới của bạn là: <strong style='font-size:18px; color:#d35400;'>" 
-                    + newPassword + "</strong><br><br>Vui lòng đăng nhập lại và đổi mật khẩu sớm nhất có thể.");
-            request.setAttribute("backUrl", "login");
-            request.getRequestDispatcher("resultMessage.jsp").forward(request, response);
-        } else {
-            request.setAttribute("error", "Lỗi hệ thống. Không thể đặt lại mật khẩu lúc này.");
-            request.getRequestDispatcher("forgotPassword.jsp").forward(request, response);
-        }
+        // 2. Lưu trạng thái xác thực tạm thời vào Session để qua Bước 2
+        HttpSession session = request.getSession();
+        session.setAttribute("reset_user", username.trim());
+        
+        // 3. Chuyển hướng sang trang đặt lại mật khẩu mới
+        response.sendRedirect(request.getContextPath() + "/resetPassword");
     }
 
     /**
@@ -113,16 +101,4 @@ public class ForgotPasswordServlet extends HttpServlet {
         }
     }
 
-    /**
-     * Sinh mật khẩu ngẫu nhiên gồm chữ và số
-     */
-    private String generateRandomPassword(int length) {
-        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        Random rnd = new Random();
-        StringBuilder sb = new StringBuilder(length);
-        for (int i = 0; i < length; i++) {
-            sb.append(chars.charAt(rnd.nextInt(chars.length())));
-        }
-        return sb.toString();
-    }
 }

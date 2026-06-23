@@ -252,7 +252,6 @@ public class UserDAO {
         u.setPhone(rs.getString("Phone"));
         u.setRoleId(rs.getInt("RoleId"));
         u.setActive(rs.getBoolean("IsActive"));
-        u.setCreatedAt(rs.getTimestamp("CreatedAt"));
         return u;
     }
 }

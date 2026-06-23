@@ -161,8 +161,26 @@
             transition: color 0.3s;
         }
 
-        .back-link a:hover {
-            color: #00d8ff;
+        .strength-meter {
+            height: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            margin-top: -15px;
+            margin-bottom: 5px;
+            border-radius: 3px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .strength-meter div {
+            height: 100%;
+            width: 0;
+            transition: all 0.3s ease;
+        }
+
+        .strength-text {
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            display: block;
         }
     </style>
 </head>
@@ -206,25 +224,20 @@
                 </div>
             <% } %>
 
-            <form action="${pageContext.request.contextPath}/resetPassword" method="post">
-
-                <label><i class="fa-solid fa-user"></i> Username</label>
-                <input type="text" name="username"
-                       placeholder="Nhập tên đăng nhập"
-                       value="<%= request.getParameter("username") != null ? request.getParameter("username") : "" %>"
-                       required>
-
-                <label><i class="fa-solid fa-envelope"></i> Email đã đăng ký</label>
-                <input type="email" name="email"
-                       placeholder="Nhập email đã đăng ký"
-                       value="<%= request.getParameter("email") != null ? request.getParameter("email") : "" %>"
-                       required>
+            <form action="${pageContext.request.contextPath}/resetPassword" method="post" id="resetForm">
+                
+                <p style="margin-bottom: 20px; font-size: 0.9rem; color: #00d8ff;">
+                    <i class="fa-solid fa-circle-user"></i> Xin chào, <strong><%= session.getAttribute("reset_user") %></strong>
+                </p>
 
                 <label><i class="fa-solid fa-lock"></i> Mật khẩu mới</label>
-                <input type="password" name="newPassword"
+                <input type="password" name="newPassword" id="newPassword"
                        placeholder="Nhập mật khẩu mới (tối thiểu 6 ký tự)"
                        minlength="6"
-                       required>
+                       required onkeyup="checkStrength()">
+                
+                <div class="strength-meter"><div id="strength-bar"></div></div>
+                <span class="strength-text" id="strength-text"></span>
 
                 <label><i class="fa-solid fa-lock"></i> Xác nhận mật khẩu mới</label>
                 <input type="password" name="confirmPassword"
@@ -233,7 +246,7 @@
                        required>
 
                 <button type="submit">
-                    <i class="fa-solid fa-key"></i> Đặt lại mật khẩu
+                    <i class="fa-solid fa-key"></i> Lưu mật khẩu
                 </button>
 
                 <div class="back-link">
@@ -247,6 +260,48 @@
     </div>
 
 </div>
+
+<script>
+    function checkStrength() {
+        var password = document.getElementById("newPassword").value;
+        var meter = document.getElementById("strength-bar");
+        var text = document.getElementById("strength-text");
+
+        if (password.length === 0) {
+            meter.style.width = "0%";
+            text.innerHTML = "";
+            return;
+        }
+
+        var strength = 0;
+        
+        // Điều kiện 1: Dài hơn 6 ký tự
+        if (password.length >= 6) strength += 1;
+        // Điều kiện 2: Có kết hợp chữ cái và số
+        if (password.match(/(?=.*[a-z])(?=.*[0-9])/i)) strength += 1;
+        // Điều kiện 3: Có chữ hoa và ký tự đặc biệt hoặc rất dài
+        if (password.match(/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9])/)) strength += 1;
+        else if (password.length >= 10 && strength == 2) strength += 1;
+
+        if (password.length < 6) {
+            meter.style.width = "33%";
+            meter.style.background = "#ff4757"; // Yếu - Đỏ
+            text.innerHTML = "Độ mạnh: <span style='color:#ff4757'>Yếu (Cần ít nhất 6 ký tự)</span>";
+        } else if (strength === 1) {
+            meter.style.width = "33%";
+            meter.style.background = "#ff4757"; // Yếu - Đỏ
+            text.innerHTML = "Độ mạnh: <span style='color:#ff4757'>Yếu (Nên thêm số và chữ hoa)</span>";
+        } else if (strength === 2) {
+            meter.style.width = "66%";
+            meter.style.background = "#ffa502"; // TB - Vàng
+            text.innerHTML = "Độ mạnh: <span style='color:#ffa502'>Trung bình</span>";
+        } else if (strength >= 3) {
+            meter.style.width = "100%";
+            meter.style.background = "#2ed573"; // Mạnh - Xanh lá
+            text.innerHTML = "Độ mạnh: <span style='color:#2ed573'>Mạnh</span>";
+        }
+    }
+</script>
 
 </body>
 </html>
