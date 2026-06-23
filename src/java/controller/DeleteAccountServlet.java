@@ -38,7 +38,7 @@ public class DeleteAccountServlet extends HttpServlet {
         int userId = Integer.parseInt(request.getParameter("id"));
         User u = userDAO.getById(userId);
         request.setAttribute("user", u);
-        request.getRequestDispatcher("deleteConfirm.jsp").forward(request, response);
+        request.getRequestDispatcher("/deleteConfirm.jsp").forward(request, response);
     }
 
     /**
@@ -74,7 +74,7 @@ public class DeleteAccountServlet extends HttpServlet {
         request.setAttribute("success", success);
         request.setAttribute("message", message);
         request.setAttribute("backUrl", request.getContextPath() + "/admin/accounts");
-        request.getRequestDispatcher("resultMessage.jsp").forward(request, response);
+        request.getRequestDispatcher("/resultMessage.jsp").forward(request, response);
     }
 
     /**

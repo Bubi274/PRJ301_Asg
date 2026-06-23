@@ -5,13 +5,13 @@
         <group name="PRJ301-SP26"/>
         <group name="SWP391"/>
         <group>
+            <file>file:/D:/SE2040/SU2026/PRJ301/SF1/src/java/utils/DBConnection.java</file>
             <file>file:/D:/SE2040/SU2026/PRJ301/SF1/src/java/dal/UserDAO.java</file>
-            <file>file:/D:/SE2040/SU2026/PRJ301/SF1/web/WEB-INF/forgotPassword.jsp</file>
+            <file>file:/D:/SE2040/SU2026/PRJ301/SF1/src/java/utils/TestDAO.java</file>
             <file>file:/D:/SE2040/SU2026/PRJ301/SF1/src/java/controller/ForgotPasswordServlet.java</file>
-            <file>file:/D:/SE2040/SU2026/PRJ301/SF1/web/WEB-INF/accessDenied.jsp</file>
             <file>file:/D:/SE2040/SU2026/PRJ301/SF1/src/java/model/User.java</file>
             <file>file:/D:/SE2040/SU2026/PRJ301/SF1/src/java/model/Request.java</file>
-            <file>file:/D:/SE2040/SU2026/PRJ301/SF1/web/WEB-INF/login.jsp</file>
+            <file>file:/D:/SE2040/SU2026/PRJ301/SF1/src/java/dal/DBContext.java</file>
         </group>
     </open-files>
 </project-private>

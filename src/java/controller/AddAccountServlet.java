@@ -37,7 +37,7 @@ public class AddAccountServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("addAccount.jsp").forward(request, response);
+        request.getRequestDispatcher("/addAccount.jsp").forward(request, response);
     }
 
     /**
@@ -73,7 +73,7 @@ public class AddAccountServlet extends HttpServlet {
             // Validation Error → quay lại Add Account Screen, KHÔNG sang Result Message
             request.setAttribute("error", errors.toString());
             request.setAttribute("formData", request.getParameterMap());
-            request.getRequestDispatcher("addAccount.jsp").forward(request, response);
+            request.getRequestDispatcher("/addAccount.jsp").forward(request, response);
             return;
         }
 
@@ -92,7 +92,7 @@ public class AddAccountServlet extends HttpServlet {
                 ? "Thêm tài khoản thành công."
                 : "Thêm tài khoản thất bại. Vui lòng thử lại.");
         request.setAttribute("backUrl", request.getContextPath() + "/admin/accounts");
-        request.getRequestDispatcher("resultMessage.jsp").forward(request, response);
+        request.getRequestDispatcher("/resultMessage.jsp").forward(request, response);
     }
 
     /**

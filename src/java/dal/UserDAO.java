@@ -50,51 +50,6 @@ public class UserDAO {
         return null;
     }
 
-    /** UC-AD-01: Check tài khoản có đang bị lockout không (gọi sp_Login_CheckLockout) */
-    public boolean isLockedOut(String username) {
-        DBContext db = new DBContext();
-        Connection con = null;
-        CallableStatement cs = null;
-        ResultSet rs = null;
-        try {
-            con = db.getConnection();
-            cs = con.prepareCall("{call sp_Login_CheckLockout(?)}");
-            cs.setString(1, username);
-            rs = cs.executeQuery();
-            return rs.next(); // có dòng => đang bị khóa
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try { db.closeConnection(con, cs, rs); } catch (SQLException ex) { ex.printStackTrace(); }
-        }
-        return false;
-    }
-
-    /** UC-AD-01: Gọi khi sai password */
-    public void onFailedPassword(String username) {
-        callSimpleProc("{call sp_Login_OnFailedPassword(?)}", username);
-    }
-
-    /** UC-AD-01: Gọi khi login thành công */
-    public void onLoginSuccess(String username) {
-        callSimpleProc("{call sp_Login_OnSuccess(?)}", username);
-    }
-
-    private void callSimpleProc(String sql, String username) {
-        DBContext db = new DBContext();
-        Connection con = null;
-        CallableStatement cs = null;
-        try {
-            con = db.getConnection();
-            cs = con.prepareCall(sql);
-            cs.setString(1, username);
-            cs.execute();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try { db.closeConnection(con, cs, null); } catch (SQLException ex) { ex.printStackTrace(); }
-        }
-    }
 
     /** UC-AD-02: Lấy toàn bộ user kèm RoleName (JOIN Roles) */
     public List<User> getAllUsers() {
@@ -297,13 +252,7 @@ public class UserDAO {
         u.setPhone(rs.getString("Phone"));
         u.setRoleId(rs.getInt("RoleId"));
         u.setActive(rs.getBoolean("IsActive"));
-        u.setUpdatedAt(rs.getTimestamp("UpdatedAt"));
-        int updatedBy = rs.getInt("UpdatedBy");
-        u.setUpdatedBy(rs.wasNull() ? null : updatedBy);
         u.setCreatedAt(rs.getTimestamp("CreatedAt"));
-        u.setLastLogin(rs.getTimestamp("LastLogin"));
-        u.setFailedLoginCount(rs.getInt("FailedLoginCount"));
-        u.setLockoutUntil(rs.getTimestamp("LockoutUntil"));
         return u;
     }
 }
