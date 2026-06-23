@@ -3,304 +3,507 @@
 <html>
 <head>
     <title>Đặt lại mật khẩu - Lumina BMS</title>
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
     <style>
         body {
             margin: 0;
             min-height: 100vh;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: white;
             background:
-                linear-gradient(rgba(0,60,70,0.8), rgba(0,40,60,0.85)),
+                linear-gradient(rgba(0,60,70,0.85), rgba(0,40,60,0.9)),
                 url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop');
             background-size: cover;
             background-position: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
-        header {
-            padding: 25px 40px;
+        .header-text {
+            text-align: center;
+            margin-bottom: 20px;
         }
 
-        .logo {
-            font-size: 1.2rem;
+        .header-text h1 {
+            font-size: 36px;
+            margin: 0 0 10px 0;
+            font-weight: 700;
+        }
+
+        .header-text p {
+            font-size: 14px;
+            color: rgba(255,255,255,0.7);
+            margin: 0;
+        }
+
+        .stepper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 15px;
+            position: relative;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: rgba(255,255,255,0.8);
+            z-index: 2;
+        }
+
+        .step-circle {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-weight: bold;
-            letter-spacing: 1px;
+            font-size: 14px;
+        }
+
+        .step.completed .step-circle {
+            background-color: #2ecc71;
             color: white;
         }
 
-        .logo i {
-            margin-right: 8px;
-            color: #00d8ff;
+        .step.active .step-circle {
+            background-color: #00d8ff;
+            color: white;
         }
 
-        .container {
-            width: 500px;
-            margin: auto;
-            padding-top: 50px;
-        }
-
-        .badge {
-            color: #00d8ff;
-            font-weight: bold;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
-
-        h1 {
-            font-size: 40px;
-            margin: 0 0 15px 0;
-        }
-
-        .container > p {
-            font-size: 1.1rem;
-            color: rgba(255,255,255,0.8);
+        .step-line {
+            width: 100px;
+            height: 2px;
+            background-color: #2ecc71;
+            z-index: 1;
         }
 
         .card {
-            margin-top: 30px;
-            padding: 40px;
+            width: 480px;
+            padding: 35px 40px;
             border-radius: 16px;
-            background: rgba(255,255,255,0.15);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-sizing: border-box;
         }
 
-        .card label {
+        .input-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .input-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             font-weight: bold;
+            font-size: 14px;
+            color: #00d8ff;
+        }
+        
+        .input-group label i {
+            margin-right: 5px;
+        }
+
+        .input-wrapper {
+            position: relative;
         }
 
         input {
             width: 100%;
-            padding: 15px;
-            margin: 10px 0 20px 0;
-            border-radius: 8px;
-            border: none;
+            padding: 14px 40px 14px 15px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
             background: rgba(255, 255, 255, 0.1);
             color: white;
             box-sizing: border-box;
-            font-size: 1rem;
+            font-size: 16px;
             outline: none;
-            transition: border 0.3s;
-        }
-
-        input::placeholder {
-            color: rgba(255, 255, 255, 0.6);
+            transition: all 0.3s;
         }
 
         input:focus {
-            border: 1px solid #00d8ff;
+            border-color: #00d8ff;
             background: rgba(255, 255, 255, 0.15);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .toggle-password:hover {
+            color: white;
+        }
+
+        /* Thước đo sức mạnh */
+        .strength-indicator {
+            margin-top: -15px;
+            margin-bottom: 25px;
+        }
+        
+        .strength-bar {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 10px;
+            margin-bottom: 8px;
+            display: flex;
+        }
+
+        .strength-segment {
+            height: 100%;
+            flex: 1;
+            background: transparent;
+            transition: background 0.3s;
+        }
+
+        .strength-text {
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Box Yêu cầu mật khẩu */
+        .requirements-box {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 25px;
+        }
+
+        .requirements-title {
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .req-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .req-list li {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.3s;
+        }
+
+        .req-list li i {
+            font-size: 10px;
+        }
+        
+        .req-list li.valid {
+            color: #2ecc71;
+        }
+
+        /* Match Indicator */
+        .match-indicator {
+            font-size: 13px;
+            color: rgba(255,255,255,0.5);
+            margin-top: 5px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .match-indicator.match {
+            color: #2ecc71;
         }
 
         button {
             width: 100%;
-            padding: 18px;
+            padding: 15px;
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             background: #00d8ff;
-            color: white;
-            font-size: 18px;
+            color: #003c46;
+            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
         }
 
         button:hover {
             background: #00bce0;
+        }
+        
+        button:disabled {
+            background: rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.5);
+            cursor: not-allowed;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .back-link a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            font-size: 13px;
+            transition: color 0.3s;
+        }
+
+        .back-link a:hover {
+            color: white;
         }
 
         .error-box {
             background: rgba(231, 76, 60, 0.2);
             color: #ff6b6b;
             border: 1px solid rgba(231, 76, 60, 0.4);
-            padding: 12px 15px;
-            border-radius: 8px;
+            padding: 12px;
+            border-radius: 6px;
             margin-bottom: 20px;
-            font-size: 0.9rem;
-        }
-
-        .success-box {
-            background: rgba(46, 204, 113, 0.2);
-            color: #2ecc71;
-            border: 1px solid rgba(46, 204, 113, 0.4);
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 1rem;
-            line-height: 1.8;
-        }
-
-        .new-password-display {
-            font-size: 24px;
-            font-weight: bold;
-            color: #00d8ff;
-            letter-spacing: 3px;
-            background: rgba(0,0,0,0.2);
-            padding: 10px 20px;
-            border-radius: 8px;
-            margin: 10px 0;
-            display: inline-block;
-        }
-
-        .back-link {
-            margin-top: 20px;
+            font-size: 13px;
             text-align: center;
-        }
-
-        .back-link a {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: color 0.3s;
-        }
-
-        .strength-meter {
-            height: 5px;
-            background: rgba(255, 255, 255, 0.1);
-            margin-top: -15px;
-            margin-bottom: 5px;
-            border-radius: 3px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .strength-meter div {
-            height: 100%;
-            width: 0;
-            transition: all 0.3s ease;
-        }
-
-        .strength-text {
-            font-size: 0.85rem;
-            margin-bottom: 20px;
-            display: block;
         }
     </style>
 </head>
 <body>
 
-<header>
-    <div class="logo">
-        <i class="fa-solid fa-building"></i>
-        VITALITY CMS
+<div class="header-text">
+    <h1>Đặt mật khẩu mới</h1>
+    <p>Tạo mật khẩu mạnh để bảo vệ tài khoản của bạn.</p>
+</div>
+
+<div class="stepper">
+    <div class="step completed">
+        <div class="step-circle"><i class="fa-solid fa-check"></i></div>
+        Xác thực
     </div>
-</header>
-
-<div class="container">
-
-    <div class="badge">Lumina BMS</div>
-    <h1>Reset Password</h1>
-    <p>Nhập username và email đã đăng ký để nhận mật khẩu mới.</p>
-
-    <div class="card">
-
-        <% if (request.getAttribute("newPassword") != null) { %>
-            <!-- Hiển thị mật khẩu mới sau khi reset thành công -->
-            <div class="success-box">
-                <i class="fa-solid fa-circle-check"></i>
-                <strong>Đặt lại mật khẩu thành công!</strong><br><br>
-                Mật khẩu mới của bạn là:<br>
-                <span class="new-password-display"><%= request.getAttribute("newPassword") %></span><br><br>
-                <small>⚠️ Vui lòng đăng nhập và đổi mật khẩu ngay sau đó.</small>
-            </div>
-            <div class="back-link">
-                <a href="${pageContext.request.contextPath}/login">
-                    <i class="fa-solid fa-arrow-left"></i> Quay lại Đăng nhập
-                </a>
-            </div>
-        <% } else { %>
-            <!-- Form đặt lại mật khẩu -->
-            <% if (request.getAttribute("error") != null) { %>
-                <div class="error-box">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-                    <%= request.getAttribute("error") %>
-                </div>
-            <% } %>
-
-            <form action="${pageContext.request.contextPath}/resetPassword" method="post" id="resetForm">
-                
-                <p style="margin-bottom: 20px; font-size: 0.9rem; color: #00d8ff;">
-                    <i class="fa-solid fa-circle-user"></i> Xin chào, <strong><%= session.getAttribute("reset_user") %></strong>
-                </p>
-
-                <label><i class="fa-solid fa-lock"></i> Mật khẩu mới</label>
-                <input type="password" name="newPassword" id="newPassword"
-                       placeholder="Nhập mật khẩu mới (tối thiểu 6 ký tự)"
-                       minlength="6"
-                       required onkeyup="checkStrength()">
-                
-                <div class="strength-meter"><div id="strength-bar"></div></div>
-                <span class="strength-text" id="strength-text"></span>
-
-                <label><i class="fa-solid fa-lock"></i> Xác nhận mật khẩu mới</label>
-                <input type="password" name="confirmPassword"
-                       placeholder="Nhập lại mật khẩu mới"
-                       minlength="6"
-                       required>
-
-                <button type="submit">
-                    <i class="fa-solid fa-key"></i> Lưu mật khẩu
-                </button>
-
-                <div class="back-link">
-                    <a href="${pageContext.request.contextPath}/login">
-                        <i class="fa-solid fa-arrow-left"></i> Quay lại Đăng nhập
-                    </a>
-                </div>
-
-            </form>
-        <% } %>
+    <div class="step-line"></div>
+    <div class="step active">
+        <div class="step-circle">2</div>
+        Đặt mật khẩu
     </div>
+</div>
 
+<div class="card">
+    <% if (request.getAttribute("error") != null) { %>
+        <div class="error-box">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <%= request.getAttribute("error") %>
+        </div>
+    <% } %>
+
+    <form action="${pageContext.request.contextPath}/resetPassword" method="post" id="resetForm">
+        
+        <div class="input-group">
+            <label><i class="fa-solid fa-lock"></i> Mật khẩu mới</label>
+            <div class="input-wrapper">
+                <input type="password" name="newPassword" id="newPassword" required>
+                <i class="fa-solid fa-eye-slash toggle-password" onclick="togglePassword('newPassword', this)"></i>
+            </div>
+        </div>
+
+        <div class="strength-indicator">
+            <div class="strength-bar">
+                <div class="strength-segment" id="seg-1"></div>
+                <div class="strength-segment" id="seg-2"></div>
+                <div class="strength-segment" id="seg-3"></div>
+                <div class="strength-segment" id="seg-4"></div>
+            </div>
+            <div class="strength-text" id="strength-text">
+                💪 Chưa nhập mật khẩu
+            </div>
+        </div>
+
+        <div class="requirements-box">
+            <div class="requirements-title">Yêu cầu mật khẩu:</div>
+            <ul class="req-list">
+                <li id="req-length"><i class="fa-solid fa-check"></i> Ít nhất 8 ký tự</li>
+                <li id="req-upper"><i class="fa-solid fa-check"></i> Có chữ hoa (A-Z)</li>
+                <li id="req-lower"><i class="fa-solid fa-check"></i> Có chữ thường (a-z)</li>
+                <li id="req-number"><i class="fa-solid fa-check"></i> Có chữ số (0-9)</li>
+                <li id="req-special"><i class="fa-solid fa-check"></i> Có ký tự đặc biệt (!@#$...)</li>
+            </ul>
+        </div>
+
+        <div class="input-group" style="margin-bottom: 10px;">
+            <label><i class="fa-solid fa-lock"></i> Xác nhận mật khẩu mới</label>
+            <div class="input-wrapper">
+                <input type="password" name="confirmPassword" id="confirmPassword" required>
+                <i class="fa-solid fa-eye-slash toggle-password" onclick="togglePassword('confirmPassword', this)"></i>
+            </div>
+        </div>
+
+        <div class="match-indicator" id="match-indicator">
+            Mật khẩu khớp
+        </div>
+
+        <button type="submit" id="submitBtn" disabled>
+            <i class="fa-solid fa-check"></i> Xác nhận đặt lại mật khẩu
+        </button>
+
+        <div class="back-link">
+            <a href="${pageContext.request.contextPath}/login">
+                <i class="fa-solid fa-angle-left"></i> Quay lại bước trước
+            </a>
+        </div>
+
+    </form>
 </div>
 
 <script>
-    function checkStrength() {
-        var password = document.getElementById("newPassword").value;
-        var meter = document.getElementById("strength-bar");
-        var text = document.getElementById("strength-text");
-
-        if (password.length === 0) {
-            meter.style.width = "0%";
-            text.innerHTML = "";
-            return;
-        }
-
-        var strength = 0;
-        
-        // Điều kiện 1: Dài hơn 6 ký tự
-        if (password.length >= 6) strength += 1;
-        // Điều kiện 2: Có kết hợp chữ cái và số
-        if (password.match(/(?=.*[a-z])(?=.*[0-9])/i)) strength += 1;
-        // Điều kiện 3: Có chữ hoa và ký tự đặc biệt hoặc rất dài
-        if (password.match(/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9])/)) strength += 1;
-        else if (password.length >= 10 && strength == 2) strength += 1;
-
-        if (password.length < 6) {
-            meter.style.width = "33%";
-            meter.style.background = "#ff4757"; // Yếu - Đỏ
-            text.innerHTML = "Độ mạnh: <span style='color:#ff4757'>Yếu (Cần ít nhất 6 ký tự)</span>";
-        } else if (strength === 1) {
-            meter.style.width = "33%";
-            meter.style.background = "#ff4757"; // Yếu - Đỏ
-            text.innerHTML = "Độ mạnh: <span style='color:#ff4757'>Yếu (Nên thêm số và chữ hoa)</span>";
-        } else if (strength === 2) {
-            meter.style.width = "66%";
-            meter.style.background = "#ffa502"; // TB - Vàng
-            text.innerHTML = "Độ mạnh: <span style='color:#ffa502'>Trung bình</span>";
-        } else if (strength >= 3) {
-            meter.style.width = "100%";
-            meter.style.background = "#2ed573"; // Mạnh - Xanh lá
-            text.innerHTML = "Độ mạnh: <span style='color:#2ed573'>Mạnh</span>";
+    function togglePassword(inputId, icon) {
+        var input = document.getElementById(inputId);
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+        } else {
+            input.type = "password";
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
         }
     }
+
+    const newPassword = document.getElementById('newPassword');
+    const confirmPassword = document.getElementById('confirmPassword');
+    const submitBtn = document.getElementById('submitBtn');
+
+    // Requirements elements
+    const reqLength = document.getElementById('req-length');
+    const reqUpper = document.getElementById('req-upper');
+    const reqLower = document.getElementById('req-lower');
+    const reqNumber = document.getElementById('req-number');
+    const reqSpecial = document.getElementById('req-special');
+
+    // Strength elements
+    const segments = [
+        document.getElementById('seg-1'),
+        document.getElementById('seg-2'),
+        document.getElementById('seg-3'),
+        document.getElementById('seg-4')
+    ];
+    const strengthText = document.getElementById('strength-text');
+    const matchIndicator = document.getElementById('match-indicator');
+
+    function updateRequirementsAndStrength() {
+        const val = newPassword.value;
+        
+        // Check Requirements
+        const isLength = val.length >= 8;
+        const isUpper = /[A-Z]/.test(val);
+        const isLower = /[a-z]/.test(val);
+        const isNumber = /[0-9]/.test(val);
+        const isSpecial = /[^A-Za-z0-9]/.test(val);
+
+        reqLength.className = isLength ? 'valid' : '';
+        reqUpper.className = isUpper ? 'valid' : '';
+        reqLower.className = isLower ? 'valid' : '';
+        reqNumber.className = isNumber ? 'valid' : '';
+        reqSpecial.className = isSpecial ? 'valid' : '';
+
+        // Calculate Strength
+        let strength = 0;
+        if (isLength) strength++;
+        if (isUpper && isLower) strength++;
+        if (isNumber) strength++;
+        if (isSpecial) strength++;
+
+        // Reset segments
+        segments.forEach(seg => seg.style.background = 'transparent');
+        strengthText.style.color = 'white';
+
+        if (val.length === 0) {
+            strengthText.innerHTML = "💪 Chưa nhập mật khẩu";
+        } else if (strength === 0 || val.length < 8) {
+            segments[0].style.background = '#e74c3c'; // Yếu
+            strengthText.innerHTML = "💪 Yếu";
+            strengthText.style.color = '#e74c3c';
+        } else if (strength === 2) {
+            segments[0].style.background = '#f39c12';
+            segments[1].style.background = '#f39c12';
+            strengthText.innerHTML = "💪 Trung bình";
+            strengthText.style.color = '#f39c12';
+        } else if (strength === 3) {
+            segments[0].style.background = '#3498db';
+            segments[1].style.background = '#3498db';
+            segments[2].style.background = '#3498db';
+            strengthText.innerHTML = "💪 Mạnh";
+            strengthText.style.color = '#3498db';
+        } else if (strength >= 4) {
+            segments[0].style.background = '#00d8ff';
+            segments[1].style.background = '#00d8ff';
+            segments[2].style.background = '#00d8ff';
+            segments[3].style.background = '#00d8ff';
+            strengthText.innerHTML = "💪 Rất mạnh";
+            strengthText.style.color = '#00d8ff';
+        }
+
+        checkMatchAndForm();
+    }
+
+    function checkMatchAndForm() {
+        const val1 = newPassword.value;
+        const val2 = confirmPassword.value;
+        
+        const isLength = val1.length >= 8;
+        const isUpper = /[A-Z]/.test(val1);
+        const isLower = /[a-z]/.test(val1);
+        const isNumber = /[0-9]/.test(val1);
+        const isSpecial = /[^A-Za-z0-9]/.test(val1);
+        
+        const allValid = isLength && isUpper && isLower && isNumber && isSpecial;
+
+        if (val2.length > 0) {
+            if (val1 === val2) {
+                matchIndicator.className = 'match-indicator match';
+                matchIndicator.innerHTML = 'Mật khẩu khớp';
+            } else {
+                matchIndicator.className = 'match-indicator';
+                matchIndicator.style.color = '#e74c3c';
+                matchIndicator.innerHTML = 'Mật khẩu không khớp';
+            }
+        } else {
+            matchIndicator.className = 'match-indicator';
+            matchIndicator.style.color = 'rgba(255,255,255,0.5)';
+            matchIndicator.innerHTML = 'Mật khẩu khớp';
+        }
+
+        // Enable submit only if all requirements are met and passwords match exactly
+        if (allValid && val1 === val2 && val1.length > 0) {
+            submitBtn.disabled = false;
+        } else {
+            submitBtn.disabled = true;
+        }
+    }
+
+    newPassword.addEventListener('input', updateRequirementsAndStrength);
+    confirmPassword.addEventListener('input', checkMatchAndForm);
 </script>
 
 </body>

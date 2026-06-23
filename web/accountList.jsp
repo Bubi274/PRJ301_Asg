@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Account List - Lumina BMS</title>
+    <title>Danh sách tài khoản - Lumina BMS</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         /* Glassmorphism theme */
@@ -60,12 +60,11 @@
     <table>
         <tr>
             <th>ID</th>
-            <th>Username</th>
+            <th>Tên đăng nhập</th>
             <th>Họ tên</th>
             <th>Email</th>
             <th>Vai trò</th>
             <th>Trạng thái</th>
-            <th>Last Login</th>
             <th>Hành động</th>
         </tr>
         <c:forEach var="u" items="${users}">
@@ -77,11 +76,10 @@
                 <td><span style="color:rgba(255,255,255,0.8);">${u.roleName}</span></td>
                 <td>
                     <c:choose>
-                        <c:when test="${u.active}"><span class="badge-active">Active</span></c:when>
-                        <c:otherwise><span class="badge-disabled">Disabled</span></c:otherwise>
+                        <c:when test="${u.active}"><span class="badge-active">Hoạt động</span></c:when>
+                        <c:otherwise><span class="badge-disabled">Vô hiệu</span></c:otherwise>
                     </c:choose>
                 </td>
-                <td style="font-size:12px; color:rgba(255,255,255,0.6);">${u.lastLogin}</td>
                 <td class="actions">
                     <a class="btn btn-secondary" href="${pageContext.request.contextPath}/admin/updateAccount?id=${u.userId}"><i class="fa-solid fa-pen"></i> Sửa</a>
                     <a class="btn btn-danger" href="${pageContext.request.contextPath}/admin/deleteAccount?id=${u.userId}"><i class="fa-solid fa-trash"></i> Xóa</a>

@@ -158,8 +158,8 @@
 <div class="container">
 
     <div class="badge">Lumina BMS</div>
-    <h1>Forgot Password</h1>
-    <p>Please enter your registered username and email to receive a new password.</p>
+    <h1>Khôi phục mật khẩu</h1>
+    <p>Vui lòng nhập tên đăng nhập và email đã đăng ký để tiếp tục.</p>
 
     <div class="login-card">
         <% if (request.getAttribute("error") != null) { %>
@@ -168,18 +168,18 @@
 
         <form action="forgotPassword" method="post">
 
-            <label>Username</label>
+            <label>Tên đăng nhập</label>
             <input type="text" name="username" placeholder="Nhập tên đăng nhập" required>
 
-            <label>Registered Email</label>
+            <label>Email đã đăng ký</label>
             <input type="email" name="email" placeholder="Nhập email đã đăng ký" required>
 
             <button type="submit">
-                Reset Password
+                Tiếp tục
             </button>
             
             <div class="forgot-password">
-                <a href="login">← Back to Login</a>
+                <a href="login">← Quay lại Đăng nhập</a>
             </div>
 
         </form>

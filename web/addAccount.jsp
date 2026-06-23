@@ -37,15 +37,15 @@
 
     <form action="${pageContext.request.contextPath}/admin/addAccount" method="post">
         <div class="form-group">
-            <label>Username</label>
+            <label>Tên đăng nhập</label>
             <input type="text" name="username" required>
         </div>
         <div class="form-group">
-            <label>Password (Mặc định)</label>
+            <label>Mật khẩu (Mặc định)</label>
             <input type="password" name="password" required minlength="6">
         </div>
         <div class="form-group">
-            <label>Họ tên (Full Name)</label>
+            <label>Họ và tên</label>
             <input type="text" name="fullName" required>
         </div>
         <div class="form-group">
@@ -57,7 +57,7 @@
             <input type="text" name="phone">
         </div>
         <div class="form-group">
-            <label>Phân quyền (Role)</label>
+            <label>Vai trò</label>
             <select name="roleId" required>
                 <option value="">-- Chọn vai trò --</option>
                 <option value="1">Admin - Quản trị viên</option>

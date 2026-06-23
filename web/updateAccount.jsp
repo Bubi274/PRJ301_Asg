@@ -45,11 +45,11 @@
         <input type="hidden" name="userId" value="${user.userId}">
 
         <div class="form-group">
-            <label>Username (Tên đăng nhập - Không thể sửa)</label>
+            <label>Tên đăng nhập (Không thể sửa)</label>
             <input type="text" value="${user.username}" disabled>
         </div>
         <div class="form-group">
-            <label>Họ tên (Full Name)</label>
+            <label>Họ và tên</label>
             <input type="text" name="fullName" value="${user.fullName}" required>
         </div>
         <div class="form-group">
@@ -61,7 +61,7 @@
             <input type="text" name="phone" value="${user.phone}">
         </div>
         <div class="form-group">
-            <label>Phân quyền (Role)</label>
+            <label>Vai trò</label>
             <select name="roleId" required>
                 <option value="1" ${user.roleId == 1 ? 'selected' : ''}>Admin - Quản trị viên</option>
                 <option value="2" ${user.roleId == 2 ? 'selected' : ''}>Manager - Quản lý</option>
@@ -71,7 +71,7 @@
         </div>
         <div class="form-group checkbox-group">
             <input type="checkbox" id="isActive" name="isActive" ${user.active ? 'checked' : ''}>
-            <label for="isActive">Trạng thái hoạt động (Active)</label>
+            <label for="isActive">Tài khoản đang hoạt động</label>
         </div>
         
         <div class="action-buttons">
