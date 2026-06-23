@@ -4,5 +4,9 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group name="PRJ301-SP26"/>
         <group name="SWP391"/>
+        <group>
+            <file>file:/D:/PRJ301_Asg/src/java/utils/TestDAO.java</file>
+            <file>file:/D:/PRJ301_Asg/src/java/utils/DBConnection.java</file>
+        </group>
     </open-files>
 </project-private>
