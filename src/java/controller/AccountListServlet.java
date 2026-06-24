@@ -35,7 +35,7 @@ public class AccountListServlet extends HttpServlet {
             throws ServletException, IOException {
         List<User> users = userDAO.getAllUsers();
         request.setAttribute("users", users);
-        request.getRequestDispatcher("accountList.jsp").forward(request, response);
+        request.getRequestDispatcher("/accountList.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

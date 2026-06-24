@@ -6,12 +6,12 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 
 /**
- * Filter bảo vệ toàn bộ url-pattern /admin/*
+ * Filter bảo vệ toàn bộ url-pattern /manager/*
  * - Chưa login -> redirect Login Screen
- * - Login rồi nhưng không phải Admin (RoleId != 1) -> Access Denied Screen
+ * - Login rồi nhưng không phải Manager (RoleId != 2) -> Access Denied Screen
  */
-@WebFilter("/admin/*")
-public class AdminAuthFilter implements Filter {
+@WebFilter("/manager/*")
+public class ManagerAuthFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -27,7 +27,7 @@ public class AdminAuthFilter implements Filter {
         }
 
         Integer roleId = (Integer) session.getAttribute("roleId");
-        if (roleId == null || roleId != 1) {
+        if (roleId == null || roleId != 2) {
             resp.sendRedirect(req.getContextPath() + "/accessDenied.jsp");
             return;
         }

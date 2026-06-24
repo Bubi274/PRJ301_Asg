@@ -12,12 +12,7 @@ public class User {
     private int roleId;
     private String roleName; // join từ Roles, chỉ dùng khi hiển thị
     private boolean active;
-    private Timestamp updatedAt;
-    private Integer updatedBy;
-    private Timestamp createdAt;
-    private Timestamp lastLogin;
-    private int failedLoginCount;
-    private Timestamp lockoutUntil;
+
 
     public User() {}
 
@@ -49,21 +44,4 @@ public class User {
     public boolean isActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
 
-    public Timestamp getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(Timestamp updatedAt) { this.updatedAt = updatedAt; }
-
-    public Integer getUpdatedBy() { return updatedBy; }
-    public void setUpdatedBy(Integer updatedBy) { this.updatedBy = updatedBy; }
-
-    public Timestamp getCreatedAt() { return createdAt; }
-    public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
-
-    public Timestamp getLastLogin() { return lastLogin; }
-    public void setLastLogin(Timestamp lastLogin) { this.lastLogin = lastLogin; }
-
-    public int getFailedLoginCount() { return failedLoginCount; }
-    public void setFailedLoginCount(int failedLoginCount) { this.failedLoginCount = failedLoginCount; }
-
-    public Timestamp getLockoutUntil() { return lockoutUntil; }
-    public void setLockoutUntil(Timestamp lockoutUntil) { this.lockoutUntil = lockoutUntil; }
 }

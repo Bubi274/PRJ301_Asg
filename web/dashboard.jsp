@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin Dashboard - Lumina BMS</title>
+    <title>Bảng điều khiển Admin - Lumina BMS</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         /* Glassmorphism theme */
@@ -39,7 +39,7 @@
 
 <div class="container">
     <h2>Lumina BMS Control Panel</h2>
-    <h1>Admin Dashboard</h1>
+    <h1>Bảng điều khiển Admin</h1>
     
     <div class="stats-card">
         <span>Tổng số tài khoản trong hệ thống</span>

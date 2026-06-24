@@ -37,7 +37,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("login.jsp").forward(request, response);
+        request.getRequestDispatcher("/login.jsp").forward(request, response);
     }
 
     /**
@@ -59,16 +59,7 @@ public class LoginServlet extends HttpServlet {
 
         if (user == null) {
             request.setAttribute("error", "Tài khoản không tồn tại.");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
-            return;
-        }
-
-        String realUsername = user.getUsername();
-
-        // Bước 2: Check lockout bằng Username gốc
-        if (userDAO.isLockedOut(realUsername)) {
-            request.setAttribute("error", "Tài khoản tạm khóa do nhập sai quá nhiều lần. Vui lòng thử lại sau 15 phút.");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
+            request.getRequestDispatcher("/login.jsp").forward(request, response);
             return;
         }
 
@@ -76,21 +67,17 @@ public class LoginServlet extends HttpServlet {
 
         if (!user.isActive()) {
             request.setAttribute("error", "Tài khoản đã bị khóa. Vui lòng liên hệ quản trị viên.");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
+            request.getRequestDispatcher("/login.jsp").forward(request, response);
             return;
         }
 
         String inputHash = sha256(password);
 
         if (!inputHash.equals(user.getPasswordHash())) {
-            userDAO.onFailedPassword(realUsername);
             request.setAttribute("error", "Sai tên đăng nhập hoặc mật khẩu.");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
+            request.getRequestDispatcher("/login.jsp").forward(request, response);
             return;
         }
-
-        // Login thành công
-        userDAO.onLoginSuccess(realUsername);
 
         HttpSession session = request.getSession();
         session.setAttribute("userId",   user.getUserId());

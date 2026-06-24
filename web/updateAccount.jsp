@@ -1,8 +1,9 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Thêm tài khoản - Lumina BMS</title>
+    <title>Cập nhật tài khoản - Lumina BMS</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         body { margin: 0; min-height: 100vh; font-family: Arial, sans-serif; color: white; background: linear-gradient(rgba(0,60,70,0.8), rgba(0,40,60,0.85)), url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop'); background-size: cover; background-position: center; display: flex; justify-content: center; align-items: center; padding: 20px 0; }
@@ -11,9 +12,14 @@
         
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 14px; color: rgba(255,255,255,0.9); }
-        .form-group input, .form-group select { width: 100%; padding: 12px 15px; border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; background: rgba(255,255,255,0.1); color: white; box-sizing: border-box; font-size: 1rem; outline: none; transition: border 0.3s, background 0.3s; }
+        .form-group input[type="text"], .form-group input[type="email"], .form-group select { width: 100%; padding: 12px 15px; border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; background: rgba(255,255,255,0.1); color: white; box-sizing: border-box; font-size: 1rem; outline: none; transition: border 0.3s, background 0.3s; }
         .form-group input:focus, .form-group select:focus { border: 1px solid #00d8ff; background: rgba(255,255,255,0.2); }
+        .form-group input:disabled { background: rgba(0,0,0,0.2); color: rgba(255,255,255,0.5); cursor: not-allowed; }
         .form-group option { background: #1f3864; color: white; }
+        
+        .checkbox-group { display: flex; align-items: center; margin-top: 10px; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
+        .checkbox-group input[type="checkbox"] { width: 20px; height: 20px; margin-right: 10px; cursor: pointer; }
+        .checkbox-group label { margin-bottom: 0; font-size: 16px; cursor: pointer; }
         
         .error-box { background: rgba(231, 76, 60, 0.2); color: #ff6b6b; border: 1px solid rgba(231, 76, 60, 0.4); padding: 12px 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9rem; text-align: center; }
         
@@ -29,47 +35,48 @@
 </head>
 <body>
 <div class="container">
-    <h2><i class="fa-solid fa-user-plus"></i> Thêm tài khoản mới</h2>
+    <h2><i class="fa-solid fa-pen-to-square"></i> Cập nhật tài khoản</h2>
 
     <% if (request.getAttribute("error") != null) { %>
         <div class="error-box"><%= request.getAttribute("error") %></div>
     <% } %>
 
-    <form action="${pageContext.request.contextPath}/admin/addAccount" method="post">
+    <form action="${pageContext.request.contextPath}/admin/updateAccount" method="post">
+        <input type="hidden" name="userId" value="${user.userId}">
+
         <div class="form-group">
-            <label>Username</label>
-            <input type="text" name="username" required>
+            <label>Tên đăng nhập (Không thể sửa)</label>
+            <input type="text" value="${user.username}" disabled>
         </div>
         <div class="form-group">
-            <label>Password (Mặc định)</label>
-            <input type="password" name="password" required minlength="6">
-        </div>
-        <div class="form-group">
-            <label>Họ tên (Full Name)</label>
-            <input type="text" name="fullName" required>
+            <label>Họ và tên</label>
+            <input type="text" name="fullName" value="${user.fullName}" required>
         </div>
         <div class="form-group">
             <label>Email liên hệ</label>
-            <input type="email" name="email">
+            <input type="email" name="email" value="${user.email}">
         </div>
         <div class="form-group">
             <label>Số điện thoại</label>
-            <input type="text" name="phone">
+            <input type="text" name="phone" value="${user.phone}">
         </div>
         <div class="form-group">
-            <label>Phân quyền (Role)</label>
+            <label>Vai trò</label>
             <select name="roleId" required>
-                <option value="">-- Chọn vai trò --</option>
-                <option value="1">Admin - Quản trị viên</option>
-                <option value="2">Manager - Quản lý</option>
-                <option value="3">Staff - Nhân viên</option>
-                <option value="4">Resident - Cư dân</option>
+                <option value="1" ${user.roleId == 1 ? 'selected' : ''}>Admin - Quản trị viên</option>
+                <option value="2" ${user.roleId == 2 ? 'selected' : ''}>Manager - Quản lý</option>
+                <option value="3" ${user.roleId == 3 ? 'selected' : ''}>Staff - Nhân viên</option>
+                <option value="4" ${user.roleId == 4 ? 'selected' : ''}>Resident - Cư dân</option>
             </select>
+        </div>
+        <div class="form-group checkbox-group">
+            <input type="checkbox" id="isActive" name="isActive" ${user.active ? 'checked' : ''}>
+            <label for="isActive">Tài khoản đang hoạt động</label>
         </div>
         
         <div class="action-buttons">
             <a class="btn btn-secondary" href="${pageContext.request.contextPath}/admin/accounts">Hủy</a>
-            <button type="submit" class="btn btn-primary">Lưu tài khoản</button>
+            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
         </div>
     </form>
 </div>

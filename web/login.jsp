@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login - Lumina BMS</title>
+    <title>Đăng nhập - Lumina BMS</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     
@@ -38,9 +38,12 @@
         }
 
         .container {
-            width: 500px;
+            max-width: 600px;
             margin: auto;
             padding-top: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .badge {
@@ -49,11 +52,14 @@
             letter-spacing: 2px;
             text-transform: uppercase;
             margin-bottom: 10px;
+            text-align: center;
         }
 
         h1 {
-            font-size: 60px;
+            font-size: 45px;
             margin: 0 0 15px 0;
+            text-align: center;
+            white-space: nowrap;
         }
 
         .container > p {
@@ -62,6 +68,7 @@
         }
 
         .login-card {
+            width: 500px;
             margin-top: 30px;
             padding: 40px;
             border-radius: 16px;
@@ -102,6 +109,24 @@
             background: rgba(255, 255, 255, 0.15);
         }
 
+        .input-wrapper {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .toggle-password:hover {
+            color: white;
+        }
+
         button {
             width: 100%;
             padding: 18px;
@@ -136,6 +161,8 @@
 
         .forgot-password a {
             color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            white-space: nowrap;
             text-decoration: none;
             font-size: 0.9rem;
             transition: color 0.3s;
@@ -158,8 +185,8 @@
 <div class="container">
 
     <div class="badge">Lumina BMS</div>
-    <h1>Welcome back</h1>
-    <p>Secure access to your building control ecosystem.</p>
+    <h1>Chào mừng trở lại</h1>
+    <p>Truy cập an toàn vào hệ thống quản lý tòa nhà.</p>
 
     <div class="login-card">
         <% if (request.getAttribute("error") != null) { %>
@@ -168,14 +195,17 @@
 
         <form action="login" method="post">
 
-            <label>Username</label>
-            <input type="text" name="username" placeholder="Nhập username hoặc email" required>
+            <label>Tên đăng nhập</label>
+            <input type="text" name="username" placeholder="Nhập tên đăng nhập hoặc email" required>
 
-            <label>Password</label>
-            <input type="password" name="password" placeholder="••••••••" required>
+            <label>Mật khẩu</label>
+            <div class="input-wrapper">
+                <input type="password" name="password" id="loginPassword" placeholder="••••••••" required>
+                <i class="fa-solid fa-eye-slash toggle-password" onclick="togglePassword('loginPassword', this)"></i>
+            </div>
 
             <button type="submit">
-                Login to Dashboard
+                Đăng nhập vào Bảng điều khiển
             </button>
             
             <div class="forgot-password">
@@ -186,6 +216,21 @@
     </div>
 
 </div>
+
+<script>
+    function togglePassword(inputId, icon) {
+        var input = document.getElementById(inputId);
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye");
+        } else {
+            input.type = "password";
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash");
+        }
+    }
+</script>
 
 </body>
 </html>

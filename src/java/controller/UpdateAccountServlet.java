@@ -38,7 +38,7 @@ public class UpdateAccountServlet extends HttpServlet {
         int userId = Integer.parseInt(request.getParameter("id"));
         User u = userDAO.getById(userId);
         request.setAttribute("user", u);
-        request.getRequestDispatcher("updateAccount.jsp").forward(request, response);
+        request.getRequestDispatcher("/updateAccount.jsp").forward(request, response);
     }
 
     /**
@@ -67,7 +67,7 @@ public class UpdateAccountServlet extends HttpServlet {
         if (errors.length() > 0) {
             request.setAttribute("error", errors.toString());
             request.setAttribute("user", userDAO.getById(userId));
-            request.getRequestDispatcher("updateAccount.jsp").forward(request, response);
+            request.getRequestDispatcher("/updateAccount.jsp").forward(request, response);
             return;
         }
 
@@ -86,7 +86,7 @@ public class UpdateAccountServlet extends HttpServlet {
                 ? "Cập nhật tài khoản thành công."
                 : "Cập nhật tài khoản thất bại.");
         request.setAttribute("backUrl", request.getContextPath() + "/admin/accounts");
-        request.getRequestDispatcher("resultMessage.jsp").forward(request, response);
+        request.getRequestDispatcher("/resultMessage.jsp").forward(request, response);
     }
 
     /**
