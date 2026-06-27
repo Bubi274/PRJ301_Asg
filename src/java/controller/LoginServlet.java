@@ -73,6 +73,7 @@ public class LoginServlet extends HttpServlet {
 
         String inputHash = sha256(password);
 
+        // Tạm thời bỏ qua băm mật khẩu, so sánh trực tiếp text nhập vào với text trong DB
         if (!inputHash.equals(user.getPasswordHash())) {
             request.setAttribute("error", "Sai tên đăng nhập hoặc mật khẩu.");
             request.getRequestDispatcher("/login.jsp").forward(request, response);
@@ -125,6 +126,8 @@ public class LoginServlet extends HttpServlet {
      * Lưu ý: Thực tế nên dùng BCrypt/Argon2, KHÔNG dùng SHA-256 thuần cho production.
      */
     private String sha256(String input) {
+        return input; // Tạm thời bỏ mã hóa
+        /*
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] hash = md.digest(input.getBytes("UTF-8"));
@@ -134,6 +137,7 @@ public class LoginServlet extends HttpServlet {
         } catch (NoSuchAlgorithmException | java.io.UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
+        */
     }
 
 }
