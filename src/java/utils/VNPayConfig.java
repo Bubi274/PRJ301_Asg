@@ -8,11 +8,8 @@ import java.util.*;
 
 public class VNPayConfig {
 
-    // Mã Website (vnp_TmnCode) và Secret Key (vnp_HashSecret) do VNPAY cung cấp trong môi trường Sandbox (Test)
-    public static String vnp_TmnCode = "3I6VKAH4";
-    // Key được gửi lúc 15:11 (Mới nhất): 7QBHSIGSAPDXLBMPFRYX7FXB24Z1R30Y
-    // Key được gửi lúc 15:10 (Cũ hơn): 0TR8UZOWCNGMLPBTVBF3D19G2V93LC47
-    public static String vnp_HashSecret = "7QBHSIGSAPDXLBMPFRYX7FXB24Z1R30Y";
+    public static String vnp_TmnCode = "N852KE4G";
+    public static String vnp_HashSecret = "OWVBY9YCR7I8KF5NHVCM6UCNT4RTN3AU";
     public static String vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
     public static String vnp_ReturnUrl = "http://localhost:8080/TestApartment/vnpay-return";
 
