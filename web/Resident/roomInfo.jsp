@@ -32,6 +32,7 @@
         <a href="roomInfo" class="menu-item active"><i class="fa-solid fa-door-open"></i>Thông tin căn hộ</a>
         <a href="services" class="menu-item"><i class="fa-solid fa-bell-concierge"></i>Đăng ký dịch vụ</a>
         <a href="user-bills" class="menu-item"><i class="fa-solid fa-credit-card"></i>Thanh toán hóa đơn</a>
+        <a href="residentRequests" class="menu-item"><i class="fa-solid fa-envelope-open-text"></i>Yêu cầu hỗ trợ</a>
     </div>
 
     <!-- MAIN CONTENT -->

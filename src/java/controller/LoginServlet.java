@@ -94,8 +94,8 @@ public class LoginServlet extends HttpServlet {
                 response.sendRedirect("managerDashboard.jsp");
                 break;
             case 3: // Staff
-                // Người 4 sẽ code màn hình này (ví dụ: staffTaskList.jsp)
-                response.sendRedirect("staffTaskList.jsp");
+                // Redirect to staff tasks list servlet protected by StaffAuthFilter
+                response.sendRedirect("staff/tasks");
                 break;
             case 4: // Resident
                 // Người 5 sẽ code màn hình này (ví dụ: residentHome)
