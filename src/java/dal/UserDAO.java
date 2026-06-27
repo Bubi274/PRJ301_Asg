@@ -1,6 +1,7 @@
 package dal;
 
 import model.User;
+import model.Request;
 import utils.DBConnection;
 
 import java.sql.*;
@@ -178,6 +179,54 @@ public class UserDAO {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public int getApartmentIdByUser(int userId) {
+        String sql = "SELECT ApartmentId FROM ApartmentResidents WHERE UserId = ? AND IsActive = 1";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("ApartmentId");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public List<Request> getRequestsByResidentId(int residentId) {
+        List<Request> list = new ArrayList<>();
+        String sql = "SELECT r.*, u.FullName AS ResidentName "
+                + "FROM Requests r "
+                + "LEFT JOIN Users u ON r.ResidentId = u.UserId "
+                + "WHERE r.ResidentId = ? "
+                + "ORDER BY r.CreatedAt DESC";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, residentId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Request r = new Request();
+                    r.setRequestId(rs.getInt("RequestId"));
+                    r.setResidentId(rs.getInt("ResidentId"));
+                    r.setRequestTypeId(rs.getInt("RequestTypeId"));
+                    r.setTitle(rs.getString("Title"));
+                    r.setDescription(rs.getString("Description"));
+                    r.setStatus(rs.getString("Status"));
+                    r.setResidentName(rs.getString("ResidentName"));
+                    if (rs.getTimestamp("CreatedAt") != null) {
+                        r.setCreatedAt(rs.getTimestamp("CreatedAt"));
+                    }
+                    list.add(r);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Loi trong getRequestsByResidentId: " + e.getMessage());
+        }
+        return list;
     }
 
     private User mapRow(ResultSet rs) throws SQLException {

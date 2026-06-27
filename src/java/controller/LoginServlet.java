@@ -98,8 +98,8 @@ public class LoginServlet extends HttpServlet {
                 response.sendRedirect("staffTaskList.jsp");
                 break;
             case 4: // Resident
-                // Người 5 sẽ code màn hình này (ví dụ: residentHome.jsp)
-                response.sendRedirect("residentHome.jsp");
+                // Người 5 sẽ code màn hình này (ví dụ: residentHome)
+                response.sendRedirect("residentHome");
                 break;
             default:
                 response.sendRedirect("accessDenied.jsp");

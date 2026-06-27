@@ -182,6 +182,25 @@ public class NotificationDAO {
         }
     }
 
+    public Notification getNotificationById(int id) {
+        String sql = "SELECT n.NotificationId, n.Title, n.Content, n.Type, n.SenderId, n.ReceiverId, n.ApartmentId, n.IsRead, n.CreatedAt, n.IsGlobal, u.FullName AS SenderName "
+                + "FROM Notifications n "
+                + "LEFT JOIN Users u ON n.SenderId = u.UserId "
+                + "WHERE n.NotificationId = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapResultSetToNotification(rs);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Loi trong getNotificationById: " + e.getMessage());
+        }
+        return null;
+    }
+
     /**
      * Helper to map ResultSet row to Notification object.
      */
