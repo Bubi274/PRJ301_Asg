@@ -229,6 +229,21 @@ public class UserDAO {
         return list;
     }
 
+    public List<User> getResidents() {
+        List<User> list = new ArrayList<>();
+        String sql = "SELECT * FROM Users WHERE RoleId = 4 AND IsActive = 1 ORDER BY FullName";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                list.add(mapRow(rs));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     private User mapRow(ResultSet rs) throws SQLException {
         User u = new User();
         u.setUserId(rs.getInt("UserId"));
