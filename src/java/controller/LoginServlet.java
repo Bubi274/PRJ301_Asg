@@ -11,8 +11,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * Servlet xử lý đăng nhập vào hệ thống.
@@ -71,9 +69,7 @@ public class LoginServlet extends HttpServlet {
             return;
         }
 
-        String inputHash = sha256(password);
-
-        if (!inputHash.equals(user.getPasswordHash())) {
+        if (!password.equals(user.getPasswordHash())) {
             request.setAttribute("error", "Sai tên đăng nhập hoặc mật khẩu.");
             request.getRequestDispatcher("/login.jsp").forward(request, response);
             return;
@@ -120,20 +116,6 @@ public class LoginServlet extends HttpServlet {
         return "Xác thực đăng nhập vào hệ thống quản trị.";
     }// </editor-fold>
 
-    /**
-     * Hash mật khẩu bằng SHA-256 trước khi so sánh với DB.
-     * Lưu ý: Thực tế nên dùng BCrypt/Argon2, KHÔNG dùng SHA-256 thuần cho production.
-     */
-    private String sha256(String input) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] hash = md.digest(input.getBytes("UTF-8"));
-            StringBuilder sb = new StringBuilder();
-            for (byte b : hash) sb.append(String.format("%02x", b));
-            return sb.toString();
-        } catch (NoSuchAlgorithmException | java.io.UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
-    }
+
 
 }

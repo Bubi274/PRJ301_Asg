@@ -10,8 +10,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
 /**
@@ -86,19 +84,6 @@ public class ForgotPasswordServlet extends HttpServlet {
         return "Xử lý quên mật khẩu (cấp lại mật khẩu mới).";
     }// </editor-fold>
 
-    /**
-     * Hash mật khẩu bằng SHA-256 (Copy từ LoginServlet/AddAccountServlet)
-     */
-    private String sha256(String input) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] hash = md.digest(input.getBytes("UTF-8"));
-            StringBuilder sb = new StringBuilder();
-            for (byte b : hash) sb.append(String.format("%02x", b));
-            return sb.toString();
-        } catch (NoSuchAlgorithmException | java.io.UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
-    }
+
 
 }

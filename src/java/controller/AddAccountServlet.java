@@ -11,8 +11,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * Servlet xử lý thêm tài khoản mới (Admin only).
@@ -85,7 +83,7 @@ public class AddAccountServlet extends HttpServlet {
         u.setRoleId(Integer.parseInt(roleIdStr));
         u.setActive(true);
 
-        boolean success = userDAO.insertUser(u, sha256(password));
+        boolean success = userDAO.insertUser(u, password);
 
         request.setAttribute("success", success);
         request.setAttribute("message", success
@@ -104,17 +102,6 @@ public class AddAccountServlet extends HttpServlet {
         return "Thêm tài khoản người dùng mới vào hệ thống.";
     }// </editor-fold>
 
-    /** Hash mật khẩu bằng SHA-256 trước khi lưu vào DB. */
-    private String sha256(String input) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] hash = md.digest(input.getBytes("UTF-8"));
-            StringBuilder sb = new StringBuilder();
-            for (byte b : hash) sb.append(String.format("%02x", b));
-            return sb.toString();
-        } catch (NoSuchAlgorithmException | java.io.UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
-    }
+
 
 }
