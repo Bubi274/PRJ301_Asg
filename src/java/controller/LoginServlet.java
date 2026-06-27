@@ -91,7 +91,7 @@ public class LoginServlet extends HttpServlet {
                 break;
             case 2: // Manager
                 // Người 2 & 3 sẽ code màn hình này (ví dụ: managerDashboard.jsp)
-                response.sendRedirect("managerDashboard.jsp");
+                response.sendRedirect(request.getContextPath() + "/manager/dashboard");
                 break;
             case 3: // Staff
                 // Người 4 sẽ code màn hình này (ví dụ: staffTaskList.jsp)
