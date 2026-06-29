@@ -19,9 +19,9 @@ public class NotificationDAO {
      * Sends a global broadcast notification to all residents/users.
      * Sets IsGlobal = 1 and ReceiverId = NULL.
      *
-     * @param title announcement title
-     * @param content announcement body content
-     * @param type type (System, Alert, etc.)
+     * @param title    announcement title
+     * @param content  announcement body content
+     * @param type     type (System, Alert, etc.)
      * @param senderId manager user ID who sends the notification
      */
     public void sendBroadcast(String title, String content, String type, int senderId) {
@@ -29,7 +29,7 @@ public class NotificationDAO {
                 + "Values (?, ?, ?, ?, Null, Null, 0, Getdate(), 1)";
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, title.trim());
             ps.setString(2, content.trim());
@@ -45,19 +45,20 @@ public class NotificationDAO {
      * Sends a private notification to a specific user.
      * Sets IsGlobal = 0.
      *
-     * @param title notification title
-     * @param content notification body content
-     * @param type type (Billing, Request, Alert, etc.)
-     * @param senderId user ID of sender
-     * @param receiverId user ID of receiver
+     * @param title       notification title
+     * @param content     notification body content
+     * @param type        type (Billing, Request, Alert, etc.)
+     * @param senderId    user ID of sender
+     * @param receiverId  user ID of receiver
      * @param apartmentId apartment ID (0 if none)
      */
-    public void sendPrivateNotification(String title, String content, String type, int senderId, int receiverId, int apartmentId) {
+    public void sendPrivateNotification(String title, String content, String type, int senderId, int receiverId,
+            int apartmentId) {
         String sql = "Insert Into Notifications (Title, Content, Type, SenderId, ReceiverId, ApartmentId, IsRead, CreatedAt, IsGlobal) "
                 + "Values (?, ?, ?, ?, ?, ?, 0, Getdate(), 0)";
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, title.trim());
             ps.setString(2, content.trim());
@@ -91,8 +92,8 @@ public class NotificationDAO {
                 + "Order By n.CreatedAt Desc";
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 list.add(mapResultSetToNotification(rs));
@@ -120,7 +121,7 @@ public class NotificationDAO {
                 + "Order By n.CreatedAt Desc";
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, senderId);
             try (ResultSet rs = ps.executeQuery()) {
@@ -135,7 +136,8 @@ public class NotificationDAO {
     }
 
     /**
-     * Retrieves notifications for a specific user (either global OR directly addressed to them).
+     * Retrieves notifications for a specific user (either global OR directly
+     * addressed to them).
      * Ordered by creation date descending.
      *
      * @param userId target user ID (e.g. Resident, Staff)
@@ -151,7 +153,7 @@ public class NotificationDAO {
                 + "Order By n.CreatedAt Desc";
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, userId);
             try (ResultSet rs = ps.executeQuery()) {
@@ -173,7 +175,7 @@ public class NotificationDAO {
     public void markAsRead(int notificationId) {
         String sql = "Update Notifications Set IsRead = 1 Where NotificationId = ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, notificationId);
             ps.executeUpdate();
@@ -188,7 +190,7 @@ public class NotificationDAO {
                 + "LEFT JOIN Users u ON n.SenderId = u.UserId "
                 + "WHERE n.NotificationId = ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {

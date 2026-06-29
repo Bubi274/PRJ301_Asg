@@ -310,6 +310,32 @@ public class StaffDAO {
     }
 
     /**
+     * Checks if email already exists in the system, excluding a specific user.
+     * Used when updating a staff member's email to avoid false duplicate errors.
+     *
+     * @param email email to check
+     * @param excludeUserId the userId to exclude from the check (the user being updated)
+     * @return true if another user has the same email, false otherwise
+     */
+    public boolean isEmailExistExcept(String email, int excludeUserId) {
+        String sql = "Select Count(*) From Users Where Email = ? And UserId != ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email.trim());
+            ps.setInt(2, excludeUserId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Loi trong isEmailExistExcept: " + e.getMessage());
+        }
+        return false;
+    }
+
+
+    /**
      * Helper to map ResultSet row to StaffProfile object.
      */
     private StaffProfile mapResultSetToStaffProfile(ResultSet rs) throws SQLException {

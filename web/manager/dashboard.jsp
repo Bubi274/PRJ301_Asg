@@ -269,6 +269,27 @@
                 <p>Tạo mới căn hộ, cấu hình diện tích, phân tầng và gán cư dân sở hữu trực tiếp vào hệ thống.</p>
             </div>
         </a>
+        <a href="${pageContext.request.contextPath}/manager/staffs" class="action-card">
+            <div>
+                <i class="fa-solid fa-users-gear"></i>
+                <h3>Quản lý nhân viên</h3>
+                <p>Thêm, sửa, vô hiệu hóa hồ sơ nhân viên kỹ thuật và vị trí công việc.</p>
+            </div>
+        </a>
+        <a href="${pageContext.request.contextPath}/manager/pendingRequests" class="action-card">
+            <div>
+                <i class="fa-solid fa-paper-plane"></i>
+                <h3>Phân công yêu cầu</h3>
+                <p>Xem yêu cầu chờ duyệt và phân công cho nhân viên phù hợp.</p>
+            </div>
+        </a>
+        <a href="${pageContext.request.contextPath}/manager/notifications" class="action-card">
+            <div>
+                <i class="fa-solid fa-bullhorn"></i>
+                <h3>Gửi thông báo</h3>
+                <p>Tạo và gửi thông báo chung tới cư dân và nhân viên.</p>
+            </div>
+        </a>
     </div>
 </div>
 
