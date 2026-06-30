@@ -31,6 +31,13 @@ public class DashboardServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Kiểm tra session: nếu chưa đăng nhập hoặc đã logout → redirect về login
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("userId") == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+
         // Query: SELECT COUNT(*) FROM Users
         int totalUsers = userDAO.countUsers();
         request.setAttribute("totalUsers", totalUsers);

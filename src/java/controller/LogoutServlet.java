@@ -4,6 +4,7 @@
  */
 package controller;
 
+import filter.AutoLoginFilter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
@@ -27,8 +28,13 @@ public class LogoutServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Xóa cookie remember-me để buộc đăng nhập lại khi logout
+        AutoLoginFilter.deleteCookie(response, AutoLoginFilter.COOKIE_NAME);
+
+        // Hủy session hiện tại
         HttpSession session = request.getSession(false);
         if (session != null) session.invalidate();
+
         response.sendRedirect("login.jsp");
     }
 

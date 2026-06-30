@@ -1,4 +1,12 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
+<%-- Nếu đã có session hợp lệ (AutoLoginFilter khôi phục từ cookie), chuyển về servlet /login để xử lý redirect --%>
+<%
+    HttpSession existingSession = request.getSession(false);
+    if (existingSession != null && existingSession.getAttribute("userId") != null) {
+        response.sendRedirect(request.getContextPath() + "/login");
+        return;
+    }
+%>
 <!DOCTYPE html>
 <html>
 <head>

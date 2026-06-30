@@ -5,6 +5,7 @@
 package controller;
 
 import dal.UserDAO;
+import filter.AutoLoginFilter;
 import model.User;
 
 import jakarta.servlet.ServletException;
@@ -37,6 +38,20 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Nếu session đã hợp lệ (do AutoLoginFilter khôi phục từ cookie) → redirect về trang tương ứng
+        HttpSession session = request.getSession(false);
+        if (session != null && session.getAttribute("userId") != null) {
+            Integer roleId = (Integer) session.getAttribute("roleId");
+            if (roleId != null) {
+                switch (roleId) {
+                    case 1: response.sendRedirect(request.getContextPath() + "/dashboard"); return;
+                    case 2: response.sendRedirect(request.getContextPath() + "/managerDashboard.jsp"); return;
+                    case 3: response.sendRedirect(request.getContextPath() + "/staffTaskList.jsp"); return;
+                    case 4: response.sendRedirect(request.getContextPath() + "/residentHome.jsp"); return;
+                    default: response.sendRedirect(request.getContextPath() + "/accessDenied.jsp"); return;
+                }
+            }
+        }
         request.getRequestDispatcher("/login.jsp").forward(request, response);
     }
 
@@ -85,6 +100,12 @@ public class LoginServlet extends HttpServlet {
         session.setAttribute("username", user.getUsername());
         session.setAttribute("roleId",   user.getRoleId());
         session.setAttribute("fullName", user.getFullName());
+
+        // Tạo cookie bền vững để tự động đăng nhập lại sau khi tắt trình duyệt / khởi động lại Tomcat
+        Cookie rememberCookie = new Cookie(AutoLoginFilter.COOKIE_NAME, String.valueOf(user.getUserId()));
+        rememberCookie.setMaxAge(AutoLoginFilter.COOKIE_MAX_AGE); // 30 ngày
+        rememberCookie.setPath("/");
+        response.addCookie(rememberCookie);
 
         // Đóng vai trò là Cổng chính (Bàn đạp) cho toàn bộ hệ thống (5 Người)
         // Dựa vào RoleId để điều hướng về các màn hình Home tương ứng
